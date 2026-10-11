@@ -35,3 +35,41 @@ test('HTTP errors and validation never expose secrets', async () => {
   await expect(retrieveTask('task-1', 'private-key')).rejects.toThrow('HTTP 403');
   await expect(retrieveTask('task-1', 'Bearer private-key')).rejects.toThrow('without the Bearer prefix');
 });
+
+test('pending envelope remains pending even with nested success and media', () => {
+  const task = normalizeTask({
+    task_id: 'task-pending', status: 'processing',
+    response: { success: true, data: [{ url: 'https://cdn.example/partial.png' }] }
+  });
+  expect(task.status).toBe('pending');
+  expect(task.success).toBe(false);
+  expect(task.mediaUrls).toEqual([]);
+});
+
+test('explicit nested failure takes precedence over an unfinished timestamp', () => {
+  const task = normalizeTask({
+    task_id: 'task-failed', finished_at: null,
+    response: { status: 'failed', error: { message: 'private upstream' } }
+  });
+  expect(task.status).toBe('failed');
+  expect(task.success).toBe(false);
+  expect(task.mediaUrls).toEqual([]);
+});
+
+test('nested task state remains pending despite a partial media URL', () => {
+  const task = normalizeTask({
+    task: { id: 'task-nested', state: 'queued' },
+    response: { data: [{ url: 'https://cdn.example/partial.png' }] }
+  });
+  expect(task.status).toBe('pending');
+  expect(task.mediaUrls).toEqual([]);
+});
+
+test('completed task extracts media from a JSON-string response', () => {
+  const task = normalizeTask({
+    id: 'task-complete', finished_at: 123,
+    response: JSON.stringify({ success: true, data: [{ url: 'https://cdn.example/final.png' }] })
+  });
+  expect(task.status).toBe('succeeded');
+  expect(task.mediaUrls).toEqual(['https://cdn.example/final.png']);
+});
