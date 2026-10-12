@@ -32,6 +32,8 @@
 
 ![FastGPT Run Preview 返回此前生成的媒体](assets/fastgpt-lookup-result.png)
 
+多个已有任务可用 **Retrieve tasks** 输入 1–20 个 Task ID，一次只读查询。逐项检查状态；只有全部成功时批次才算成功。此工具不会提交新生成。
+
 ## 无密钥示例
 
 [examples/generate.json](examples/generate.json) 不含密钥。把真实密钥写入本地 .secrets.local.json，内容为 {"apiKey":"YOUR_OWN_KEY"}，然后运行：

@@ -38,6 +38,8 @@ The FastGPT screenshots below show installation and a **read-only query of a pre
 
 ![Previously generated media returned in FastGPT Run Preview](assets/fastgpt-lookup-result.png)
 
+For several existing tasks, **Retrieve tasks** accepts 1–20 Task IDs and queries them in one read-only call. Check each item’s status; a batch is complete only when all items succeed. This does not submit new generation.
+
 ### 4. Copyable no-key example
 
 [examples/generate.json](examples/generate.json) contains no credentials. Create a local .secrets.local.json containing {"apiKey":"YOUR_OWN_KEY"}, then:
