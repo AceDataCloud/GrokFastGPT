@@ -1,0 +1,6 @@
+{
+  "prompt": "A teal cube slowly rotates on a cream tabletop, studio lighting, no text.",
+  "model": "grok-imagine-video-1.5-fast:reverse",
+  "resolution": "480p",
+  "duration": 6
+}
